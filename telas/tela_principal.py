@@ -16,7 +16,14 @@ TEXTO_REALIZADO = "#166534" #verde escuro texto
 
 FUNDO_ACOMPANHAMENTO = "#dbeafe" #azul claro fundo
 TEXTO_ACOMPANHAMENTO = "#1e40af" #azul escuro texto
-class Dashbord(ctk.Frame):
-    def __init__(self, parent, **kwargs):
-        super().__init__(parent, **kwargs)
+class TelaPrincipal(ctk.CTk):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+        self.title("Gestão de Clinica")
+        self.geometry("500x700")
+if __name__ == "__main__":
+    app = TelaPrincipal()
+    app.mainloop()
+
+
     
