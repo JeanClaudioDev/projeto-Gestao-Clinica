@@ -1,0 +1,157 @@
+import customtkinter as ctk
+from tkinter import ttk
+
+"""| Cor | Código | Uso |"""
+
+COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
+COR_AZUL = "#3b82f6" #Cards, destaques, status
+COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
+COR_CINZA_ESCURO = "#111827" #Textos e títulos
+
+"""Cores dos Status na Tabela:
+Status | Cor de Fundo | Cor do Texto |"""
+
+FUNDO_REALIZADO = "#dcfce7" #verde claro fundo
+TEXTO_REALIZADO = "#166534" #verde escuro texto
+
+FUNDO_ACOMPANHAMENTO = "#dbeafe" #azul claro fundo
+TEXTO_ACOMPANHAMENTO = "#1e40af" #azul escuro texto
+class Dashboard(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master, fg_color='transparent')
+        self.frame_titulo = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)
+        self.frame_titulo.pack(padx=20,pady=25,anchor='w')
+
+        self.label_bem_vindo = ctk.CTkLabel(
+            self.frame_titulo,
+            text="Bem-vindo(a) de volta! 👋",
+            text_color=COR_ROXO,
+            font=("Arial", 16, "bold")
+        )
+        self.label_bem_vindo.pack(pady=5, anchor='w')
+
+        self.titulo = ctk.CTkLabel(
+            self.frame_titulo,
+            text="Dashboard",
+            text_color=COR_CINZA_ESCURO,
+            font=("Arial", 24, "bold")
+        )
+        self.titulo.pack(pady=5, anchor='w')
+        #frame para os cards
+        self.frame_cards = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)
+        self.frame_cards.pack(pady=20, padx=20,fill='x')
+        self.frame_cards.grid_columnconfigure(0, weight=2)
+        self.frame_cards.grid_columnconfigure(1, weight=2)
+        self.frame_cards.grid_columnconfigure(2, weight=2)
+        #frame para o card total pacientes
+        self.frame_total_pacientes = ctk.CTkFrame(self.frame_cards,
+                                                  fg_color=COR_BRANCO,
+                                                  corner_radius=20,
+                                                  border_width=1.5)
+        self.frame_total_pacientes.grid(row=0, column=0, pady=20, padx=20, sticky='ew')
+        #labels total pacientes
+        self.label_emoji_pacientes = ctk.CTkLabel(self.frame_total_pacientes,
+                                                  text="😷",
+                                                  font=("Arial", 50))
+        self.label_emoji_pacientes.grid(row=0, column=0,pady=15,padx=15,sticky='w')
+
+        self.label_total_pacientes = ctk.CTkLabel(self.frame_total_pacientes,
+                                                  text="Total de Pacientes",
+                                                  text_color=COR_CINZA_ESCURO,
+                                                  font=("Arial", 16, "bold"))
+        self.label_total_pacientes.grid(row=1, column=0,pady=15,padx=15, sticky='w')
+
+        self.label_numero_pacientes = ctk.CTkLabel(self.frame_total_pacientes,
+                                                   text="0.0",
+                                                   text_color=COR_CINZA_ESCURO,
+                                                  font=("Arial", 16, "bold"))
+        self.label_numero_pacientes.grid(row=2, column=0,pady=15,padx=15, sticky='w')
+
+        #frame para atendimentos registrado
+        self.frame_atendimentos = ctk.CTkFrame(self.frame_cards,
+                                               fg_color=COR_BRANCO,
+                                                  corner_radius=20,
+                                                  border_width=1.5)
+        self.frame_atendimentos.grid(row=0, column=1, pady=20, padx=20, sticky='ew')
+        
+        #label atendimentos registrados
+        self.label_emoji_atendimentos = ctk.CTkLabel(self.frame_atendimentos,
+                                                     text='📋',
+                                                  font=("Arial", 50))
+        self.label_emoji_atendimentos.grid(row=0, column=0,pady=15,padx=15,sticky='w')
+
+        self.label_atendimentos_registrados = ctk.CTkLabel(self.frame_atendimentos,
+                                                           text="Atendimentos Registrados",
+                                                           text_color=COR_CINZA_ESCURO,
+                                                           font=("Arial", 16, "bold"))
+        self.label_atendimentos_registrados.grid(row=1, column=0,pady=15,padx=15, sticky='w')
+
+        self.label_numero_atendimentos = ctk.CTkLabel(self.frame_atendimentos,
+                                                      text="0.0",
+                                                      text_color=COR_CINZA_ESCURO,
+                                                      font=("Arial", 16, "bold"))
+        self.label_numero_atendimentos.grid(row=2, column=0,pady=15,padx=15, sticky='w')
+
+        #frame atendimentos hoje
+        self.frame_atendimentos_hoje = ctk.CTkFrame(self.frame_cards,
+                                                    fg_color=COR_BRANCO,
+                                                  corner_radius=20,
+                                                  border_width=1.5)
+        self.frame_atendimentos_hoje.grid(row=0, column=2, pady=20, padx=20, sticky='ew')
+        #labels atendimentos hoje
+        self.label_emoji_atendimentos_hoje = ctk.CTkLabel(self.frame_atendimentos_hoje,
+                                                          text="✅",
+                                                  font=("Arial", 45))
+        self.label_emoji_atendimentos_hoje.grid(row=0, column=0,pady=15,padx=15,sticky='w')
+
+        self.label_atendimentos_hoje = ctk.CTkLabel(self.frame_atendimentos_hoje,
+                                                    text="Atendimentos Hoje",
+                                                    text_color=COR_CINZA_ESCURO,
+                                                    font=("Arial", 16, "bold"))
+        self.label_atendimentos_hoje.grid(row=1, column=0,pady=15,padx=15, sticky='w')
+
+        self.label_numero_atendimentos_hoje = ctk.CTkLabel(self.frame_atendimentos_hoje,
+                                                           text="0.0",
+                                                           text_color=COR_CINZA_ESCURO,
+                                                           font=("Arial", 16, "bold"))
+        self.label_numero_atendimentos_hoje.grid(row=2, column=0,pady=15,padx=15, sticky='w')
+
+        #frame tabela
+        self.frame_tabela = ctk.CTkFrame(self, fg_color=COR_BRANCO,
+                                         corner_radius=20)
+        self.frame_tabela.pack(pady=20, padx=20,fill='x')
+        #label tabela titulo
+        self.label_titulo_tabela = ctk.CTkLabel(self.frame_tabela,
+                                                text="Atendimentos de Hoje",
+                                                text_color=COR_CINZA_ESCURO,
+                                                font=("Arial", 16, "bold"))
+        self.label_titulo_tabela.pack(pady=30, padx=30, anchor="w")
+        #estilo treeview
+        style = ttk.Style()
+        style.configure("Treeview",rowheight=30, font=("Arial", 13))
+
+        style.configure("Treeview.Heading",
+                        font=("Arial", 13, "bold"))
+        #treeviw tabela
+        self.tabela = ttk.Treeview(self.frame_tabela,
+                                   columns=("Paciente",
+                                            "Horário",
+                                            "Tipo",
+                                            "Status"),
+                                            show="headings",)
+        self.tabela.pack(fill="x", padx=20, pady=10)
+        #adicionando na tabela
+        self.tabela.heading("Paciente", text="Paciente", anchor='w')
+        self.tabela.heading("Horário", text="Horário", anchor='w')
+        self.tabela.heading("Tipo", text="Tipo", anchor='w')
+        self.tabela.heading("Status", text="Status", anchor='w')
+        #largura das colunas
+        self.tabela.column("Paciente", width=220, anchor='w')
+        self.tabela.column("Horário", width=100, anchor='w')
+        self.tabela.column("Tipo", width=150, anchor='w')
+        self.tabela.column("Status", width=130, anchor="w")
+        #dados de teste
+        self.tabela.insert("","end",values=("João Silva", "09:00", "Consulta", "Realizado"))
+
+        self.tabela.insert("","end",values=("Maria Souza", "10:30", "Retorno", "Acompanhamento"))
