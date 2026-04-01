@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from telas.dashbord import Dashboard
 from telas.tela_novo_atendimento import NovoAtendimento
+from telas.tela_novo_paciente import NovoPaciente
 
 """| Cor | Código | Uso |"""
 
@@ -58,9 +59,14 @@ class App(ctk.CTk):
         #carregar dashboard
         # self.dashboard = Dashboard(self.conteudo_frame)
         # self.dashboard.pack(fill="both", expand=True)
+
         #carregar novo atendimento
-        self.novo_atendimento = NovoAtendimento(self.conteudo_frame)
-        self.novo_atendimento.pack(fill="both", expand=True)
+        # self.novo_atendimento = NovoAtendimento(self.conteudo_frame)
+        # self.novo_atendimento.pack(fill="both", expand=True)
+
+        #carregar novo paciente
+        self.novo_paciente = NovoPaciente(self.conteudo_frame)
+        self.novo_paciente.pack(fill='both', expand=True)
 
 
 app = App()
