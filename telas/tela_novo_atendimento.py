@@ -151,7 +151,7 @@ class NovoAtendimento(ctk.CTkFrame):
         mg.showinfo("Sucesso", "Atendimento cadastrado com sucesso!")
         self.limpar_campos()
     def limpar_campos(self):
-        self.entry_paciente.delete(0, "end")
+        self.combobox_paciente.set("")
         self.combobox_tipo.set("")
         self.text_observacoes.delete("1.0", "end")
         self.combo_status.set("")

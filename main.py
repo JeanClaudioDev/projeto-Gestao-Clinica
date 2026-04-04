@@ -5,6 +5,7 @@ from telas.tela_atendimentos import Atendimento
 from telas.tela_novo_atendimento import NovoAtendimento
 from telas.tela_novo_paciente import NovoPaciente
 from telas.tela_detalhes_paciente import TelaDetalhes
+from telas.tela_historico_pacientes import HistoricoPacientes
 
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
@@ -17,7 +18,7 @@ class App(ctk.CTk):
         super().__init__()
 
         self.title("Clínica Saúde")
-        self.geometry("1820x800")
+        self.geometry("1700x800")
         self.configure(fg_color = COR_CINZA_CLARO)
 
         self.grid_columnconfigure(1, weight=1)
@@ -61,14 +62,18 @@ class App(ctk.CTk):
         self.limpar_tela()
         self.novo_atendimento = NovoAtendimento(self.conteudo_frame)
         self.novo_atendimento.pack(fill="both", expand=True)
-    def mostrar_novo_paciente(self):
+    def mostrar_novo_paciente(self, paciente=None):
         self.limpar_tela()
-        self.novo_paciente = NovoPaciente(self.conteudo_frame)
+        self.novo_paciente = NovoPaciente(self.conteudo_frame, paciente)
         self.novo_paciente.pack(fill="both",expand=True)
     def abrir_detalhes(self, paciente):
         self.limpar_tela()  
         tela = TelaDetalhes(self.conteudo_frame, paciente, self.mostrar_paciente, self.mostrar_novo_atendimento)
         tela.pack(fill="both", expand=True)
+    def abrir_historico_paciente(self, paciente):
+        self.limpar_tela()
+        self.historico = HistoricoPacientes(self.conteudo_frame,paciente,self.mostrar_atendimento)
+        self.historico.pack(fill="both", expand=True)
 
 app = App()
 app.mainloop()

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkcalendar import DateEntry
 from tkinter import ttk
+from utils.json_manager import listar_atendimentos, listar_pacientes
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
@@ -41,7 +42,7 @@ class Atendimento(ctk.CTkFrame):
                                           text="Limpar Filtros",
                                           text_color=COR_CINZA,
                                           fg_color="transparent",
-                                          font=("Arial", 12,"bold"))
+                                          font=("Arial", 12,"bold"), command=self.limpar_filtros)
         self.botao_limpar.pack(side="right")
         #frame filtros
         self.frame_filtros = ctk.CTkFrame(self,fg_color=COR_BRANCO)
@@ -63,6 +64,7 @@ class Atendimento(ctk.CTkFrame):
                                          corner_radius=10,
                                          font=("Arial", 12,"bold"))
         self.entry_buscar.grid(row=1, column=0,sticky='ew',pady=5,padx=10)
+        self.entry_buscar.bind("<KeyRelease>", self.filtrar_atendimentos)
         #label status
         self.label_status = ctk.CTkLabel(self.frame_filtros,
                                          text="Status",
@@ -134,12 +136,107 @@ class Atendimento(ctk.CTkFrame):
         self.frame_tabela.pack(fill='both', expand=True, pady=20,padx=20)
         #treeview
         self.treeview_filtro = ttk.Treeview(self.frame_tabela,
-                                            columns=("ID", "PACIENTE", "TIPO","DATA/HORA","STATUS", "AÇÕES"),
+                                            columns=("ID", "PACIENTE", "ULTIMO", "TOTAL", "AÇÕES"),
                                             show="headings")
         self.treeview_filtro.pack(fill='both', expand=True, pady=20, padx=20)
         self.treeview_filtro.heading("ID", text="ID", anchor="w")
-        self.treeview_filtro.heading("PACIENTE", text="PACIENTE")
-        self.treeview_filtro.heading("TIPO", text="TIPO")
-        self.treeview_filtro.heading("DATA/HORA", text="DATA/HORA")
-        self.treeview_filtro.heading("STATUS", text="STATUS")
-        self.treeview_filtro.heading("AÇÕES", text="AÇÕES")
+        self.treeview_filtro.heading("PACIENTE", text="Paciente", anchor="w")
+        self.treeview_filtro.heading("ULTIMO", text="Último Atendimento", anchor="w")
+        self.treeview_filtro.heading("TOTAL", text="Total", anchor="w")
+        self.treeview_filtro.heading("AÇÕES", text="Ações", anchor="w")
+        self.treeview_filtro.bind("<Double-1>", self.abrir_historico)
+        self.carregar_atendimentos()
+    def carregar_atendimentos(self):
+
+        # limpar tabela
+        for item in self.treeview_filtro.get_children():
+            self.treeview_filtro.delete(item)
+        self.atendimentos = listar_atendimentos()
+        self.pacientes = listar_pacientes()
+
+        # dicionário para agrupar pacientes
+        self.pacientes_dict = {}
+        for atendimento in self.atendimentos:
+            self.paciente_id = atendimento["paciente_id"]
+            if self.paciente_id not in self.pacientes_dict:
+
+                self.pacientes_dict[self.paciente_id] = {
+                    "total": 0,
+                    "ultimo": atendimento["data"]}
+            self.pacientes_dict[self.paciente_id]["total"] += 1
+            self.pacientes_dict[self.paciente_id]["ultimo"] = atendimento["data"]
+
+        for paciente in self.pacientes:
+            self.pid = paciente["id"]
+
+            if self.pid in self.pacientes_dict:
+                self.total = self.pacientes_dict[self.pid]["total"]
+                self.ultimo = self.pacientes_dict[self.pid]["ultimo"]
+
+                self.treeview_filtro.insert(
+                    "",
+                    "end",
+                    values=(
+                        self.pid,
+                        paciente["nome"],
+                        self.ultimo,
+                        self.total,
+                        "Ver Histórico"))
+    def filtrar_atendimentos(self, event=None):
+        texto = self.entry_buscar.get().lower()
+        status = self.combo_status.get()
+        tipo = self.combo_tipo.get()
+        data_inicio = self.data_inicio.get_date()
+        data_fim = self.data_fim.get_date()
+        for item in self.treeview_filtro.get_children():
+            self.treeview_filtro.delete(item)
+        atendimentos = listar_atendimentos()
+        pacientes = listar_pacientes()
+        for atendimento in atendimentos:
+            nome_paciente = ""
+            for paciente in pacientes:
+                if paciente["id"] == atendimento["paciente_id"]:
+                    nome_paciente = paciente["nome"]
+                    break
+            # converter data do atendimento
+            from datetime import datetime
+            data_atendimento = datetime.strptime(atendimento["data"], "%d/%m/%Y").date()
+
+            if (texto in nome_paciente.lower()
+                and (status == "" or atendimento["status"] == status)
+                and (tipo == "" or atendimento["tipo"] == tipo)
+                and data_inicio <= data_atendimento <= data_fim):
+
+                self.treeview_filtro.insert(
+                    "",
+                    "end",
+                    values=(
+                        atendimento["id"],
+                        nome_paciente,
+                        atendimento["tipo"],
+                        atendimento["data"],
+                        atendimento["status"],
+                        "Ver"
+                    )
+                )
+    def abrir_historico(self, event):
+        item = self.treeview_filtro.selection()
+        if not item:
+            return
+
+        valores = self.treeview_filtro.item(item)["values"]
+        nome_paciente = valores[1]
+
+        pacientes = listar_pacientes()
+        paciente = None
+
+        for p in pacientes:
+            if p["nome"] == nome_paciente:
+                paciente = p
+                break
+        if paciente:
+            self.master.master.abrir_historico_paciente(paciente)
+    def limpar_filtros(self):
+        self.entry_buscar.delete(0, "end")
+        self.combo_status.set("")
+        self.combo_tipo.set("")

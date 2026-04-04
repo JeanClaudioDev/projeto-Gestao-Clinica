@@ -12,13 +12,14 @@ COR_CINZA = "#808080" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
 class NovoPaciente(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, paciente=None):
         super().__init__(master, fg_color=COR_ROXO)
+        self.paciente = paciente
         self.grid_columnconfigure(0, weight=1)
         #frame titulo
         self.frame_titulo = ctk.CTkFrame(self,
                                          fg_color=COR_ROXO)
-        self.frame_titulo.grid(row=0, column=0)
+        self.frame_titulo.grid(row=0, column=0, pady=(20,10))
         #labels titulo
         self.emoji_titulo = ctk.CTkLabel(self.frame_titulo,
                                          text="💾",
@@ -81,6 +82,10 @@ class NovoPaciente(ctk.CTkFrame):
                                                 fg_color=COR_BRANCO,
                                                 text_color=COR_CINZA)
         self.entry_email.pack(fill="x")
+        if paciente:
+            self.entry_nome_completo.insert(0, paciente["nome"])
+            self.entry_telefone.insert(0, paciente["telefone"])
+            self.entry_email.insert(0, paciente["email"])
         #card numero de documento
         self.card_numero_documento = self.criar_card("📄 Número de Documento (CPF ou RG)","#ff0000")
         #entry numero de documento

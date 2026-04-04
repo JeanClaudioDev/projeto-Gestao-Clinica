@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from utils.json_manager import listar_pacientes
+from utils.json_manager import listar_pacientes, salvar_json, listar_atendimentos
+from tkinter import messagebox
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
@@ -95,7 +96,6 @@ class Paciente(ctk.CTkFrame):
 
             linha = ctk.CTkFrame(self.frame_lista, fg_color="#ffffff")
             linha.pack(fill="x", padx=20, pady=2)
-            linha.bind("<Button-1>", lambda e, p=paciente: self.abrir_detalhes(p))
             linha.configure(cursor="hand2")
             for widget in linha.winfo_children():
                 widget.bind("<Button-1>", lambda e, p=paciente: self.abrir_detalhes(p))
@@ -125,12 +125,16 @@ class Paciente(ctk.CTkFrame):
                 anchor="w"
             ).grid(row=0,column=2,padx=10)
 
-            btn_editar = ctk.CTkButton(linha,text="Editar",width=60,fg_color=COR_AZUL)
+            btn_editar = ctk.CTkButton(linha,text="Editar",width=60,fg_color=COR_AZUL, command=lambda p=paciente: self.editar_paciente(p))
             btn_editar.grid(row=0,column=3,padx=5, sticky="e")
 
-            btn_excluir = ctk.CTkButton(linha,text="Excluir",width=60,fg_color="#ef4444")
+            btn_excluir = ctk.CTkButton(linha,text="Excluir",width=60,fg_color="#ef4444",command=lambda p=paciente: self.excluir_paciente(p))
             btn_excluir.grid(row=0,column=4,padx=5, sticky="e")
+            linha.bind("<Button-1>", lambda e, p=paciente: self.abrir_detalhes(p))
 
+            for widget in linha.winfo_children():
+                if not isinstance(widget, ctk.CTkButton):
+                    widget.bind("<Button-1>", lambda e, p=paciente: self.abrir_detalhes(p))
     def buscar_paciente(self, event=None):
         texto = self.entry_buscar.get().lower()
         resultado = []
@@ -140,3 +144,23 @@ class Paciente(ctk.CTkFrame):
             if texto in nome or texto in telefone:
                 resultado.append(paciente)
         self.mostrar_pacientes(resultado)
+    def editar_paciente(self, paciente):
+        self.abrir_novo_paciente(paciente)
+    def excluir_paciente(self, paciente):
+
+        confirm = messagebox.askyesno(
+            "Excluir paciente",
+            f"Deseja excluir {paciente['nome']}?")
+        if not confirm:
+            return
+        pacientes = listar_pacientes()
+        pacientes = [p for p in pacientes if p["id"] != paciente["id"]]
+        salvar_json("dados/pacientes.json", pacientes)
+        # atualizar lista da tela
+        self.pacientes = pacientes
+        self.mostrar_pacientes(self.pacientes)
+        atendimentos = listar_atendimentos()
+        atendimentos = [
+            a for a in atendimentos
+            if a["paciente_id"] != paciente["id"]]
+        salvar_json("dados/atendimentos.json", atendimentos)
