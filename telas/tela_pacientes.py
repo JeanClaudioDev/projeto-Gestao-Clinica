@@ -96,9 +96,9 @@ class Paciente(ctk.CTkFrame):
 
             linha = ctk.CTkFrame(self.frame_lista, fg_color="#ffffff")
             linha.pack(fill="x", padx=20, pady=2)
+            linha.bind("<Enter>", lambda e: linha.configure(fg_color="#f9fafb"))
+            linha.bind("<Leave>", lambda e: linha.configure(fg_color="#ffffff"))
             linha.configure(cursor="hand2")
-            for widget in linha.winfo_children():
-                widget.bind("<Button-1>", lambda e, p=paciente: self.abrir_detalhes(p))
 
             ctk.CTkLabel(
                 linha,
@@ -140,7 +140,7 @@ class Paciente(ctk.CTkFrame):
         resultado = []
         for paciente in self.pacientes:
             nome = paciente["nome"].lower()
-            telefone = paciente["telefone"]
+            telefone = str(paciente["telefone"]).lower()
             if texto in nome or texto in telefone:
                 resultado.append(paciente)
         self.mostrar_pacientes(resultado)
@@ -151,6 +151,7 @@ class Paciente(ctk.CTkFrame):
         confirm = messagebox.askyesno(
             "Excluir paciente",
             f"Deseja excluir {paciente['nome']}?")
+        messagebox.showinfo("Sucesso", "Paciente excluído com sucesso!")
         if not confirm:
             return
         pacientes = listar_pacientes()

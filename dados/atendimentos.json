@@ -1,18 +1,34 @@
 [
     {
+        "id": 1,
+        "paciente_id": 1,
+        "data": "05/04/2026",
+        "tipo": "Consulta",
+        "observacoes": "",
+        "status": "Realizado"
+    },
+    {
         "id": 2,
         "paciente_id": 2,
-        "data": "04/04/2026",
-        "tipo": "Retorno",
-        "observacoes": "Vai voltar",
+        "data": "05/04/2026",
+        "tipo": "Avaliação",
+        "observacoes": "Descobrir como pode ter tanta beleza",
         "status": "Em Acompanhamento"
     },
     {
         "id": 3,
         "paciente_id": 2,
-        "data": "04/04/2026",
-        "tipo": "Exame",
-        "observacoes": "Vai ter que fazer cirurgia",
+        "data": "05/04/2026",
+        "tipo": "Consulta",
+        "observacoes": "Analisar toda a belezar",
         "status": "Em Acompanhamento"
+    },
+    {
+        "id": 4,
+        "paciente_id": 1,
+        "data": "05/04/2026",
+        "tipo": "Retorno",
+        "observacoes": "Vai voltar ai",
+        "status": "Realizado"
     }
 ]

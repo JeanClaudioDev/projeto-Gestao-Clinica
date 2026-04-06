@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from utils.json_manager import listar_atendimentos
 
 COR_ROXO = "#7c3aed"
 COR_BRANCO ="#ffffff"
@@ -22,21 +23,21 @@ class TelaDetalhes(ctk.CTkFrame):
 
         self.btn_voltar = ctk.CTkButton(
             self.frame_acoes,
-            text="← Voltar",
-            fg_color=COR_CINZA,
+            text="← Voltar",fg_color="transparent",
+            text_color=COR_CINZA_ESCURO,
+            hover_color="#e5e7eb",
             command=self.voltar_pacientes)
         self.btn_voltar.pack(side="left")
 
         self.btn_novo_atendimento = ctk.CTkButton(
             self.frame_acoes,
             text="➕ Novo Atendimento",
-            fg_color=COR_ROXO,
-            command=self.novo_atendimento)
+            fg_color=COR_ROXO,command=lambda: self.novo_atendimento(self.paciente))
         self.btn_novo_atendimento.pack(side="right")
         # titulo
         self.titulo = ctk.CTkLabel(
             self.frame_principal,
-            text=f"Detalhes - {paciente['nome']}",
+            text=f"Paciente: {paciente['nome']}",
             font=("Arial",24,"bold"),
             text_color=COR_CINZA_ESCURO
         )
@@ -51,12 +52,20 @@ class TelaDetalhes(ctk.CTkFrame):
         self.criar_item("Nome", paciente["nome"])
         self.criar_item("Telefone", paciente["telefone"])
         self.criar_item("Email", paciente["email"])
+        self.criar_item("ID do Paciente", paciente["id"])
+        atendimentos = listar_atendimentos()
+        total = 0
+        for a in atendimentos:
+            if a["paciente_id"] == paciente["id"]:
+                total += 1
+        self.criar_item("Total de Atendimentos", total)
 
     def criar_item(self, nome, texto):
 
         item = ctk.CTkFrame(self.lista, fg_color="#f9fafb", corner_radius=10)
         item.pack(fill="x", pady=5)
-
+        item.bind("<Enter>", lambda e: item.configure(fg_color="#f3f4f6"))
+        item.bind("<Leave>", lambda e: item.configure(fg_color="#f9fafb"))
         # avatar
         avatar = ctk.CTkLabel(
             item,
@@ -66,8 +75,7 @@ class TelaDetalhes(ctk.CTkFrame):
             fg_color=COR_ROXO,
             corner_radius=20,
             text_color="white",
-            font=("Arial",16,"bold")
-        )
+            font=("Arial",16,"bold"))
         avatar.pack(side="left", padx=10, pady=10)
 
         # texto
@@ -78,15 +86,13 @@ class TelaDetalhes(ctk.CTkFrame):
             frame_texto,
             text=nome,
             font=("Arial",14,"bold"),
-            text_color=COR_CINZA_ESCURO
-        )
+            text_color=COR_CINZA_ESCURO)
         nome_label.pack(anchor="w")
 
         desc = ctk.CTkLabel(
             frame_texto,
             text=texto,
-            text_color=COR_CINZA
-        )
+            text_color=COR_CINZA)
         desc.pack(anchor="w")
 
         # seta direita
@@ -94,6 +100,5 @@ class TelaDetalhes(ctk.CTkFrame):
             item,
             text="›",
             font=("Arial",20),
-            text_color=COR_CINZA
-        )
+            text_color=COR_CINZA)
         seta.pack(side="right", padx=10)

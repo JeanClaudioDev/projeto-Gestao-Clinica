@@ -77,6 +77,7 @@ class Atendimento(ctk.CTkFrame):
                                                     state="readonly",
                                                     font=("Arial", 12, "bold"))
         self.combo_status.grid(row=1, column=1,sticky='ew',pady=5,padx=10)
+        self.combo_status.bind("<<ComboboxSelected>>", self.filtrar_atendimentos)
         #label tipo
         self.label_tipo = ctk.CTkLabel(self.frame_filtros,
                                          text="Tipo",
@@ -93,6 +94,7 @@ class Atendimento(ctk.CTkFrame):
                                                      state='readonly',
                                                      font=("Arial", 12, "bold"))
         self.combo_tipo.grid(row=1, column=2,sticky='ew',pady=5,padx=10)
+        self.combo_tipo.bind("<<ComboboxSelected>>", self.filtrar_atendimentos)
         #label data inicio
         self.label_data_inicio = ctk.CTkLabel(self.frame_filtros,
                                          text="Data Inicio",
@@ -119,6 +121,8 @@ class Atendimento(ctk.CTkFrame):
                                     background=COR_CINZA,
                                     foreground="white")
         self.data_fim.grid(row=1, column=4,sticky='ew',pady=5,padx=10)
+        self.data_inicio.bind("<<DateEntrySelected>>", self.filtrar_atendimentos)
+        self.data_fim.bind("<<DateEntrySelected>>", self.filtrar_atendimentos)
         style = ttk.Style()
 
         style.configure(
@@ -139,12 +143,19 @@ class Atendimento(ctk.CTkFrame):
                                             columns=("ID", "PACIENTE", "ULTIMO", "TOTAL", "AÇÕES"),
                                             show="headings")
         self.treeview_filtro.pack(fill='both', expand=True, pady=20, padx=20)
+        #heading treeview
         self.treeview_filtro.heading("ID", text="ID", anchor="w")
         self.treeview_filtro.heading("PACIENTE", text="Paciente", anchor="w")
         self.treeview_filtro.heading("ULTIMO", text="Último Atendimento", anchor="w")
         self.treeview_filtro.heading("TOTAL", text="Total", anchor="w")
         self.treeview_filtro.heading("AÇÕES", text="Ações", anchor="w")
-        self.treeview_filtro.bind("<Double-1>", self.abrir_historico)
+        #column treeview
+        self.treeview_filtro.column("ID", width=60)
+        self.treeview_filtro.column("PACIENTE", width=250)
+        self.treeview_filtro.column("ULTIMO", width=150)
+        self.treeview_filtro.column("TOTAL", width=80)
+        self.treeview_filtro.column("AÇÕES", width=120)
+        self.treeview_filtro.bind("<ButtonRelease-1>", self.abrir_historico)
         self.carregar_atendimentos()
     def carregar_atendimentos(self):
 
@@ -192,16 +203,12 @@ class Atendimento(ctk.CTkFrame):
             self.treeview_filtro.delete(item)
         atendimentos = listar_atendimentos()
         pacientes = listar_pacientes()
+        pacientes_dict = {p["id"]: p["nome"] for p in pacientes}
         for atendimento in atendimentos:
-            nome_paciente = ""
-            for paciente in pacientes:
-                if paciente["id"] == atendimento["paciente_id"]:
-                    nome_paciente = paciente["nome"]
-                    break
+            nome_paciente = pacientes_dict.get(atendimento["paciente_id"], "")
             # converter data do atendimento
             from datetime import datetime
             data_atendimento = datetime.strptime(atendimento["data"], "%d/%m/%Y").date()
-
             if (texto in nome_paciente.lower()
                 and (status == "" or atendimento["status"] == status)
                 and (tipo == "" or atendimento["tipo"] == tipo)
@@ -240,3 +247,4 @@ class Atendimento(ctk.CTkFrame):
         self.entry_buscar.delete(0, "end")
         self.combo_status.set("")
         self.combo_tipo.set("")
+        self.carregar_atendimentos()

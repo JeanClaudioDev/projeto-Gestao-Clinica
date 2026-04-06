@@ -5,6 +5,11 @@ def carregar_json(data):
     try:
         with open(data, "r", encoding="utf-8") as arquivo:
             dados = json.load(arquivo)
+            for item in dados:
+                if "id" in item:
+                    item["id"] = int(item["id"])
+                if "paciente_id" in item:
+                    item["paciente_id"] = int(item["paciente_id"])
             return dados
     except FileNotFoundError:
         return []
@@ -27,7 +32,7 @@ def adicionar_atendimento(atendimento):
 def gerar_id(lista):
     if not lista:
         return 1
-    ids = [item.get("id", 0) for item in lista]
+    ids = [int(item.get("id", 0)) for item in lista]
     return max(ids) + 1
 #listagem de pacientes
 def listar_pacientes():

@@ -1,7 +1,6 @@
 import customtkinter as ctk
 from tkinter import ttk
-from utils.json_manager import convert_date_for_label
-from utils.json_manager import carregar_json
+from utils.json_manager import convert_date_for_label, listar_atendimentos, listar_pacientes
 from datetime import datetime
 
 """| Cor | Código | Uso |"""
@@ -50,6 +49,7 @@ class Dashboard(ctk.CTkFrame):
         self.frame_cards.pack(pady=20, padx=20,fill='both', expand=True)
         self.frame_cards.grid_columnconfigure(0, weight=2)
         self.frame_cards.grid_columnconfigure(1, weight=2)
+        self.frame_cards.grid_columnconfigure(2, weight=1)
         self.frame_cards.grid_rowconfigure(0,weight=1)
         #frame para o card total pacientes
         self.frame_total_pacientes, self.label_numero_pacientes = self.criar_card_dashboard("😷","Total de Pacientes")
@@ -83,7 +83,7 @@ class Dashboard(ctk.CTkFrame):
                                             "Tipo",
                                             "Status"),
                                             show="headings",)
-        self.tabela.pack(fill="x", padx=20, pady=10)
+        self.tabela.pack(fill="both", expand=True, padx=20, pady=10)
         #adicionando na tabela
         self.tabela.heading("Paciente", text="Paciente", anchor='w')
         self.tabela.heading("Data", text="Data", anchor='w')
@@ -100,6 +100,8 @@ class Dashboard(ctk.CTkFrame):
         self.carregar_atendimentos_hoje()
     def criar_card_dashboard(self, emoji, titulo):
         card = ctk.CTkFrame(self.frame_cards, fg_color=COR_BRANCO, corner_radius=20, border_width=1.5)
+        card.bind("<Enter>", lambda e: card.configure(border_color=COR_ROXO))
+        card.bind("<Leave>", lambda e: card.configure(border_color="#e5e7eb"))
         card.grid_columnconfigure(0, weight=1)
 
         label = ctk.CTkLabel(card,text=emoji,
@@ -110,7 +112,7 @@ class Dashboard(ctk.CTkFrame):
                                     text_color=COR_CINZA_ESCURO,
                                     font=("Arial", 16, "bold"))
         label_titulo.grid(row=1, column=0,pady=15,padx=15, sticky='w')
-        label_numero = ctk.CTkLabel(card,text="0.0",
+        label_numero = ctk.CTkLabel(card,text="0",
                                     text_color=COR_CINZA_ESCURO,
                                     font=("Arial", 16, "bold"))
         label_numero.grid(row=2,column=0,pady=15,padx=15, sticky='w')
@@ -120,25 +122,24 @@ class Dashboard(ctk.CTkFrame):
         for i in self.tabela.get_children():
             self.tabela.delete(i)
 
-        atendimentos = carregar_json("dados/atendimentos.json")
-        pacientes = carregar_json("dados/pacientes.json")
+        atendimentos = listar_atendimentos()
+        pacientes = listar_pacientes()
 
         pacientes_dict = {p["id"]: p["nome"] for p in pacientes}
+        hoje = datetime.now().strftime("%d/%m/%Y")
 
         for atendimento in atendimentos:
-
+            if atendimento["data"]!= hoje:
+                continue
             nome_paciente = pacientes_dict.get(
-                atendimento["paciente_id"], "Desconhecido"
-            )
+                atendimento["paciente_id"], "Desconhecido")
 
             status = atendimento["status"]
-
             tag = ""
             if status == "Realizado":
                 tag = "realizado"
             elif status == "Em Acompanhamento":
                 tag = "acompanhamento"
-
             self.tabela.insert(
                 "",
                 "end",
@@ -146,13 +147,10 @@ class Dashboard(ctk.CTkFrame):
                     nome_paciente,
                     atendimento["data"],
                     atendimento["tipo"],
-                    atendimento["status"]
-                ),
-                tags=(tag,)
-            )
+                    atendimento["status"]),tags=(tag,))
     def atualizar_dashboard(self):
-        pacientes = carregar_json("dados/pacientes.json")
-        atendimentos = carregar_json("dados/atendimentos.json")
+        pacientes = listar_pacientes()
+        atendimentos = listar_atendimentos()
         total_pacientes = len(pacientes)
         total_atendimentos = len(atendimentos)
         hoje = datetime.now().strftime("%d/%m/%Y")

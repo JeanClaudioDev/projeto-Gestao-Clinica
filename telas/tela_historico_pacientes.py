@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from utils.json_manager import listar_atendimentos,listar_pacientes
+from utils.json_manager import listar_atendimentos
+from datetime import datetime 
 
 
 COR_ROXO = "#7c3aed"
@@ -49,18 +50,13 @@ class HistoricoPacientes(ctk.CTkFrame):
         self.carregar_historico()
 
     def carregar_historico(self):
-
         self.atendimentos = listar_atendimentos()
-
         for atendimento in self.atendimentos:
-
-            if atendimento["paciente_id"] == self.paciente["id"]:
-
+            if int(atendimento["paciente_id"]) == int(self.paciente["id"]):
                 self.criar_item(atendimento)
-
     def criar_item(self, atendimento):
 
-        self.item = ctk.CTkFrame(self.frame_lista, fg_color="#f9fafb", corner_radius=10)
+        self.item = ctk.CTkFrame(self.frame_lista, fg_color="#f9fafb", corner_radius=10, border_width=1)
         self.item.pack(fill="x", pady=5)
 
         # tipo atendimento
@@ -87,3 +83,5 @@ class HistoricoPacientes(ctk.CTkFrame):
             text_color=COR_CINZA
         )
         self.label_status.pack(anchor="w", padx=10, pady=(0,10))
+        self.item.bind("<Enter>", lambda e: self.item.configure(fg_color="#f3f4f6"))
+        self.item.bind("<Leave>", lambda e: self.item.configure(fg_color="#f9fafb"))
