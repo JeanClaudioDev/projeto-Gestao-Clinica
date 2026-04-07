@@ -34,7 +34,7 @@ class TelaDetalhes(ctk.CTkFrame):
             text="➕ Novo Atendimento",
             fg_color=COR_ROXO,command=self.novo_atendimento)
         self.btn_novo_atendimento.pack(side="right")
-        # titulo
+        #titulo
         self.titulo = ctk.CTkLabel(
             self.frame_principal,
             text=f"Paciente: {paciente['nome']}",
@@ -43,16 +43,16 @@ class TelaDetalhes(ctk.CTkFrame):
         )
         self.titulo.pack(anchor="w", pady=(0,20))
 
-        # lista scrollável
+        #lista scrollável
         self.lista = ctk.CTkScrollableFrame(
             self.frame_principal,
             fg_color=COR_BRANCO
         )
         self.lista.pack(fill="both", expand=True)
+        self.criar_item("ID do Paciente", paciente["id"])
         self.criar_item("Nome", paciente["nome"])
         self.criar_item("Telefone", paciente["telefone"])
         self.criar_item("Email", paciente["email"])
-        self.criar_item("ID do Paciente", paciente["id"])
         atendimentos = listar_atendimentos()
         total = 0
         for a in atendimentos:

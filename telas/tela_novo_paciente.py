@@ -3,7 +3,6 @@ from tkcalendar import DateEntry
 from tkinter import messagebox as mg
 from models.pacientes import Paciente
 from utils.json_manager import adicionar_paciente
-import re
 
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
@@ -123,6 +122,7 @@ class NovoPaciente(ctk.CTkFrame):
         data_nascimento = self.dataentry_data_nascimento.get()
         telefone = self.entry_telefone.get()
         email = self.entry_email.get()
+        doc = self.entry_numero_documento.get()
         if not nome:
             mg.showerror("Erro", "Digite o nome do paciente")
             return
@@ -131,14 +131,17 @@ class NovoPaciente(ctk.CTkFrame):
             return
         if email and not self.email_valido(email):
             mg.showerror("Erro", "Email inválido")
+        if not doc:
+            mg.showerror("Erro", "Digite o documento")
             return
         paciente = Paciente(
             id=0,
-            usuario=self.master.master.usuario["usuario"],
             nome=nome,
             data_nascimento=data_nascimento,
             telefone=telefone,
-            email=email)
+            email=email,
+            doc=doc
+            )
         adicionar_paciente(paciente)
         self.limpar_campos()
         mg.showinfo("Sucesso", "Paciente cadastrado com sucesso!")

@@ -20,9 +20,7 @@ TEXTO_REALIZADO = "#166534" #verde escuro texto
 FUNDO_ACOMPANHAMENTO = "#dbeafe" #azul claro fundo
 TEXTO_ACOMPANHAMENTO = "#1e40af" #azul escuro texto
 class Dashboard(ctk.CTkFrame):
-    def __init__(self, master, usuario, voltar_login):
-        self.usuario = usuario
-        self.voltar_login = voltar_login
+    def __init__(self, master):
         super().__init__(master, fg_color='transparent')
         self.frame_titulo = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)
         self.frame_titulo.pack(padx=20,pady=25,anchor='w')
@@ -31,7 +29,7 @@ class Dashboard(ctk.CTkFrame):
             self.frame_titulo,
             text="Bem-vindo(a) de volta! 👋",
             text_color=COR_ROXO,
-            font=("Arial", 16, "bold")
+            font=("Roboto", 16, "bold")
         )
         self.label_bem_vindo.pack(pady=5, anchor='w')
 
@@ -39,12 +37,12 @@ class Dashboard(ctk.CTkFrame):
             self.frame_titulo,
             text="Dashboard",
             text_color=COR_CINZA_ESCURO,
-            font=("Arial", 24, "bold")
+            font=("Roboto", 24, "bold")
         )
         self.titulo.pack(pady=5, anchor='w')
         self.label_data = ctk.CTkLabel(self.frame_titulo,
                                        text=convert_date_for_label(),
-                                       text_color=COR_CINZA_ESCURO,font=("Arial", 16, "bold"))
+                                       text_color=COR_CINZA_ESCURO,font=("Roboto", 16, "bold"))
         self.label_data.pack()
         #frame para os cards
         self.frame_cards = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)

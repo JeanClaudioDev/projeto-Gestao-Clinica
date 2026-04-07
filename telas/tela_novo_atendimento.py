@@ -143,7 +143,6 @@ class NovoAtendimento(ctk.CTkFrame):
         paciente_id = self.pacientes_dict.get(nome_paciente)
         atendimento = Atendimento(
             id=0,
-            usuario=self.master.master.usuario["usuario"],
             paciente_id=paciente_id,
             data=data,
             tipo=tipo,
