@@ -24,11 +24,11 @@ class App(ctk.CTk):
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        self.menu_frame = ctk.CTkFrame(self, width=300, fg_color=COR_ROXO)
+        self.menu_frame = ctk.CTkFrame(self, width=500, fg_color=COR_ROXO, corner_radius=0)
         self.menu_frame.grid(row=0, column=0, sticky='ns')
 
         self.label_clinica = ctk.CTkLabel(self.menu_frame, text="🧬 Clinica Saude+", font=("Arial", 24, "bold"), text_color=COR_BRANCO)
-        self.label_clinica.pack(pady=20, padx=10)
+        self.label_clinica.pack(pady=(20,30), padx=10)
 
         self.criar_botao("Dashboard", self.mostrar_dashboard)
         self.criar_botao("Pacientes", self.mostrar_paciente)
@@ -38,12 +38,13 @@ class App(ctk.CTk):
         self.criar_botao("Sair", self.sair_sistema)
 
         #frame para as telas
-        self.conteudo_frame = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)
+        self.conteudo_frame = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO, corner_radius=0)
         self.conteudo_frame.grid(row=0, column=1, sticky="nsew")
         self.mostrar_dashboard()
     def criar_botao(self, texto, comando):
-        botao = ctk.CTkButton(self.menu_frame, text=texto, anchor="w",font=("Arial", 16, "bold"), command=comando)
-        botao.pack(pady=15, padx=10, fill="x")
+        botao = ctk.CTkButton(self.menu_frame, text=texto, anchor="w",font=("Arial", 16, "bold"),height=40,
+                              command=comando)
+        botao.pack(pady=5, padx=5, fill="x")
         return botao
     def limpar_tela(self):
         for widget in self.conteudo_frame.winfo_children():
@@ -62,11 +63,11 @@ class App(ctk.CTk):
         self.atendimento.pack(fill="both", expand=True)
     def mostrar_novo_atendimento(self):
         self.limpar_tela()
-        self.novo_atendimento = NovoAtendimento(self.conteudo_frame)
+        self.novo_atendimento = NovoAtendimento(self.conteudo_frame, corner_radius=0)
         self.novo_atendimento.pack(fill="both", expand=True)
     def mostrar_novo_paciente(self, paciente=None):
         self.limpar_tela()
-        self.novo_paciente = NovoPaciente(self.conteudo_frame, paciente)
+        self.novo_paciente = NovoPaciente(self.conteudo_frame, paciente, corner_radius=0)
         self.novo_paciente.pack(fill="both",expand=True)
     def abrir_detalhes(self, paciente):
         self.limpar_tela()  

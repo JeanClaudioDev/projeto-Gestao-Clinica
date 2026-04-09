@@ -4,6 +4,7 @@ from tkinter import messagebox as mg
 from models.pacientes import Paciente
 from controllers.paciente_controller import adicionar_paciente
 
+
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
@@ -11,13 +12,13 @@ COR_CINZA = "#808080" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
 class NovoPaciente(ctk.CTkFrame):
-    def __init__(self, master, paciente=None):
-        super().__init__(master, fg_color=COR_ROXO)
+    def __init__(self, master, paciente=None, **kwargs):
+        super().__init__(master, fg_color=COR_BRANCO, **kwargs)
         self.paciente = paciente
         self.grid_columnconfigure(0, weight=1)
         #frame titulo
         self.frame_titulo = ctk.CTkFrame(self,
-                                         fg_color=COR_ROXO)
+                                         fg_color=COR_BRANCO)
         self.frame_titulo.grid(row=0, column=0, pady=20)
         #labels titulo
         self.emoji_titulo = ctk.CTkLabel(self.frame_titulo,
@@ -38,19 +39,19 @@ class NovoPaciente(ctk.CTkFrame):
                                                     font=('Arial', 12, 'bold'))
         self.label_detalhes_paciente.pack()
         #frame centro
-        self.frame_centro = ctk.CTkFrame(self, fg_color=COR_ROXO)
+        self.frame_centro = ctk.CTkFrame(self, fg_color=COR_BRANCO)
         self.frame_centro.grid(row=1, column=0, sticky="nsew")
         self.frame_centro.grid_columnconfigure(0, weight=1)
         self.frame_centro.grid_rowconfigure(0, weight=1)
         #frame principal
-        self.frame_principal = ctk.CTkFrame(self.frame_centro, fg_color=COR_BRANCO,
+        self.frame_principal = ctk.CTkFrame(self.frame_centro, fg_color=COR_ROXO,
                                             corner_radius=20,
                                             width=750,
                                             height=620)
         self.frame_principal.pack(expand=True,padx=80, pady=10)
         self.frame_principal.pack_propagate(False)
         #card nome completo
-        self.card_nome_completo = self.criar_card("Nome Completo",COR_ROXO)
+        self.card_nome_completo = self.criar_card("Nome Completo",COR_BRANCO)
         #entry nome completo
         self.entry_nome_completo = ctk.CTkEntry(self.card_nome_completo,
                                                 placeholder_text="Maria da Silva",
@@ -59,7 +60,7 @@ class NovoPaciente(ctk.CTkFrame):
                                                 height=36)
         self.entry_nome_completo.pack(fill="x")
         #card data de nascimento
-        self.card_data_nascimento = self.criar_card("📅 Data de Nascimento", COR_AZUL)
+        self.card_data_nascimento = self.criar_card("📅 Data de Nascimento", COR_BRANCO)
         #data entry data de nascimento
         self.dataentry_data_nascimento = DateEntry(self.card_data_nascimento,
                                                    date_pattern = "dd/mm/yyyy",
@@ -69,7 +70,7 @@ class NovoPaciente(ctk.CTkFrame):
                                                 height=36)
         self.dataentry_data_nascimento.pack(fill="x")
         #card telefone
-        self.card_telefone = self.criar_card("📞 Telefone","#f0c609")
+        self.card_telefone = self.criar_card("📞 Telefone",COR_BRANCO)
         #entry telefone
         self.entry_telefone = ctk.CTkEntry(self.card_telefone,
                                                 placeholder_text="(11) 99999-9999",
@@ -79,7 +80,7 @@ class NovoPaciente(ctk.CTkFrame):
         self.entry_telefone.pack(fill="x")
         self.entry_telefone.bind("<KeyRelease>", self.mascara_telefone)
         #card email
-        self.card_email = self.criar_card("✉️E-mail","#2CCE6A")
+        self.card_email = self.criar_card("✉️E-mail",COR_BRANCO)
         #entry email
         self.entry_email = ctk.CTkEntry(self.card_email,
                                                 placeholder_text="maria@gmail.com",
@@ -92,7 +93,7 @@ class NovoPaciente(ctk.CTkFrame):
             self.entry_telefone.insert(0, paciente["telefone"])
             self.entry_email.insert(0, paciente["email"])
         #card numero de documento
-        self.card_numero_documento = self.criar_card("📄 Número de Documento (CPF ou RG)","#ff0000")
+        self.card_numero_documento = self.criar_card("📄 Número de Documento (CPF ou RG)",COR_BRANCO)
         #entry numero de documento
         self.entry_numero_documento = ctk.CTkEntry(self.card_numero_documento,
                                                    placeholder_text="000.000.000-00",
@@ -105,23 +106,24 @@ class NovoPaciente(ctk.CTkFrame):
             self.entry_numero_documento.insert(0, paciente["doc"])
         #card para botao de salvar paciente
         self.card_salvar = ctk.CTkFrame(self.frame_principal,
-                                        fg_color=COR_BRANCO)
-        self.card_salvar.pack(fill='x', expand=True,pady=5, padx=20)
+                                        fg_color=COR_ROXO)
+        self.card_salvar.pack(fill='x',pady=10, padx=20)
         #botao salvar atendimento
         self.botao_salvar_paciente = ctk.CTkButton(self.card_salvar,text="💾Salvar Paciente",
                                         font=("Arial", 16, "bold"),
                                         text_color=COR_BRANCO,
-                                        fg_color=COR_ROXO,
+                                        fg_color=COR_AZUL,
+                                        corner_radius=10,
                                         height=40, width=500,
                                         command=self.salvar_paciente) 
         self.botao_salvar_paciente.pack(fill='x')
     def criar_card(self, texto, cor):
-        card = ctk.CTkFrame(self.frame_principal, fg_color=COR_BRANCO)
+        card = ctk.CTkFrame(self.frame_principal, fg_color=COR_ROXO)
         card.pack(fill="x", pady=10, padx=20)
 
         label = ctk.CTkLabel(card,text=texto,
                                   text_color=cor,
-                                  font=("Arial",12,"bold"))
+                                  font=("Arial",14,"bold"))
         label.pack(anchor="w")
         return card
     def email_valido(self, email):

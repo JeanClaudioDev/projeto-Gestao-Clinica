@@ -65,18 +65,10 @@
     },
     {
         "id": 9,
-        "nome": "Juliana Freitas",
-        "data_nascimento": "03/12/1991",
-        "telefone": "(85) 91234-9999",
-        "email": "juliana@gmail.com",
-        "doc": "901.234.567-89"
-    },
-    {
-        "id": 10,
-        "nome": "Bruno Carvalho",
-        "data_nascimento": "27/06/1989",
-        "telefone": "(85) 91234-0000",
-        "email": "bruno@gmail.com",
-        "doc": "012.345.678-90"
+        "nome": "joão souza",
+        "data_nascimento": "10/04/2026",
+        "telefone": "(85) 99245-5842",
+        "email": "joaosouza@gmail.com",
+        "doc": "098.765.434-52"
     }
 ]

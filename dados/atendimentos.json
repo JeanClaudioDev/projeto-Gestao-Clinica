@@ -192,30 +192,6 @@
         "status": "Agendado"
     },
     {
-        "id": 25,
-        "paciente_id": 9,
-        "data": "02/04/2026",
-        "tipo": "Consulta",
-        "observacoes": "Rotina",
-        "status": "Realizado"
-    },
-    {
-        "id": 26,
-        "paciente_id": 9,
-        "data": "05/04/2026",
-        "tipo": "Retorno",
-        "observacoes": "Tudo bem",
-        "status": "Realizado"
-    },
-    {
-        "id": 27,
-        "paciente_id": 9,
-        "data": "07/04/2026",
-        "tipo": "Retorno",
-        "observacoes": "Acompanhamento",
-        "status": "Agendado"
-    },
-    {
         "id": 28,
         "paciente_id": 10,
         "data": "01/04/2026",
@@ -225,18 +201,10 @@
     },
     {
         "id": 29,
-        "paciente_id": 10,
-        "data": "03/04/2026",
-        "tipo": "Exame",
-        "observacoes": "Ultrassom",
-        "status": "Realizado"
-    },
-    {
-        "id": 30,
-        "paciente_id": 10,
-        "data": "06/04/2026",
-        "tipo": "Retorno",
-        "observacoes": "Aguardando laudo",
-        "status": "Agendado"
+        "paciente_id": 9,
+        "data": "10/04/2026",
+        "tipo": "Avaliação",
+        "observacoes": "nada",
+        "status": "Em Acompanhamento"
     }
 ]
