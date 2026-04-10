@@ -2,14 +2,20 @@ import customtkinter as ctk
 from tkcalendar import DateEntry
 from tkinter import messagebox as mg
 from models.pacientes import Paciente
+from views.tela_atendimentos import TelaAtendimento
 from controllers.paciente_controller import adicionar_paciente
-
+from pathlib import Path
+from PIL import Image
 
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA = "#808080" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+PATH_IMG_SAVE = BASE_DIR / "assets" / "diskette.png"
 
 class NovoPaciente(ctk.CTkFrame):
     def __init__(self, master, paciente=None, **kwargs):
@@ -21,13 +27,16 @@ class NovoPaciente(ctk.CTkFrame):
                                          fg_color=COR_BRANCO)
         self.frame_titulo.grid(row=0, column=0, pady=20)
         #labels titulo
+        diskett = ctk.CTkImage(light_image=Image.open(PATH_IMG_SAVE),
+                            dark_image=Image.open(PATH_IMG_SAVE),
+                            size=(30, 30))
         self.emoji_titulo = ctk.CTkLabel(self.frame_titulo,
-                                         text="💾",
-                                         font=("Arial",50))
+                                         image=diskett,
+                                         text='')
         self.emoji_titulo.pack()
         self.label_novo_paciente = ctk.CTkLabel(self.frame_titulo,
                                                    text="Novo Paciente",
-                                                   text_color=COR_BRANCO,
+                                                   text_color=COR_ROXO,
                                                    font=("Arial", 28, "bold"))
         self.label_novo_paciente.pack()
         if paciente:
@@ -35,7 +44,7 @@ class NovoPaciente(ctk.CTkFrame):
 
         self.label_detalhes_paciente = ctk.CTkLabel(self.frame_titulo,
                                                     text="Registre os detalhes do Paciente",
-                                                    text_color=COR_BRANCO,
+                                                    text_color=COR_ROXO,
                                                     font=('Arial', 12, 'bold'))
         self.label_detalhes_paciente.pack()
         #frame centro
@@ -137,6 +146,7 @@ class NovoPaciente(ctk.CTkFrame):
         telefone = self.entry_telefone.get()
         email = self.entry_email.get()
         doc = self.entry_numero_documento.get()
+
         if not nome:
             mg.showerror("Erro", "Digite o nome do paciente")
             return
@@ -145,13 +155,19 @@ class NovoPaciente(ctk.CTkFrame):
             return
         if not email:
             mg.showerror("Erro", "Digite o E-mail")
+            return
         if email and not self.email_valido(email):
             mg.showerror("Erro", "Email inválido")
+            return
         if not doc:
             mg.showerror("Erro", "Digite o documento")
             return
+        if self.paciente:
+            id_paciente = self.paciente["id"]
+        else:
+            id_paciente = 0
         paciente = Paciente(
-            id=0,
+            id=id_paciente,
             nome=nome,
             data_nascimento=data_nascimento,
             telefone=telefone,
@@ -161,6 +177,7 @@ class NovoPaciente(ctk.CTkFrame):
         adicionar_paciente(paciente)
         self.limpar_campos()
         mg.showinfo("Sucesso", "Paciente cadastrado com sucesso!")
+        self.master.master.mostrar_paciente()
     def limpar_campos(self):
         self.entry_nome_completo.delete(0, "end")
         self.entry_telefone.delete(0, "end")

@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from tkinter import messagebox as mg
 from views.dashbord import Dashboard
-from views.tela_pacientes import Paciente
-from views.tela_atendimentos import Atendimento
+from views.tela_pacientes import TelaPaciente
+from views.tela_atendimentos import TelaAtendimento
 from views.tela_novo_atendimento import NovoAtendimento
 from views.tela_novo_paciente import NovoPaciente
 from views.tela_detalhes_paciente import TelaDetalhes
@@ -55,11 +55,11 @@ class App(ctk.CTk):
         self.dashboard.pack(fill="both",expand=True)
     def mostrar_paciente(self):
         self.limpar_tela()
-        self.paciente = Paciente(self.conteudo_frame, self.mostrar_novo_paciente, self.abrir_detalhes)
+        self.paciente = TelaPaciente(self.conteudo_frame, self.mostrar_novo_paciente, self.abrir_detalhes)
         self.paciente.pack(fill="both", expand=True)
     def mostrar_atendimento(self):
         self.limpar_tela()
-        self.atendimento = Atendimento(self.conteudo_frame,self.mostrar_novo_atendimento)
+        self.atendimento = TelaAtendimento(self.conteudo_frame,self.mostrar_novo_atendimento)
         self.atendimento.pack(fill="both", expand=True)
     def mostrar_novo_atendimento(self):
         self.limpar_tela()

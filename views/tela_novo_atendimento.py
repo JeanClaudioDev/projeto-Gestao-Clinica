@@ -2,14 +2,21 @@ import customtkinter as ctk
 from tkcalendar import DateEntry
 from tkinter import messagebox as mg
 from models.atendimentos import Atendimento
+from views.tela_pacientes import TelaPaciente
 from controllers.atendimento_controller import adicionar_atendimento
 from controllers.paciente_controller import listar_pacientes
+from pathlib import Path
+from PIL import Image
 
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA = "#808080" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+PATH_IMG_SAVE = BASE_DIR / "assets" / "diskette.png"
 
 class NovoAtendimento(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -22,9 +29,11 @@ class NovoAtendimento(ctk.CTkFrame):
                                          fg_color=COR_BRANCO)
         self.frame_titulo.grid(row=0, column=0, pady=20)
         #labels titulo
+        diskett = ctk.CTkImage(light_image=Image.open(PATH_IMG_SAVE),
+                            dark_image=Image.open(PATH_IMG_SAVE),
+                            size=(30, 30))
         self.emoji_titulo = ctk.CTkLabel(self.frame_titulo,
-                                         text="💾",
-                                         font=("Arial",50))
+                                         image=diskett, text='')
         self.emoji_titulo.pack()
         self.label_novo_atendimento = ctk.CTkLabel(self.frame_titulo,
                                                    text="Novo Atendimento",
@@ -57,7 +66,7 @@ class NovoAtendimento(ctk.CTkFrame):
         self.combobox_paciente = ctk.CTkComboBox(
             self.card_paciente,fg_color=COR_BRANCO,text_color='black',button_hover_color="#6d28d9",
             dropdown_fg_color=COR_BRANCO, dropdown_hover_color=COR_AZUL, dropdown_text_color=COR_CINZA_ESCURO,
-            values=list(self.pacientes_dict.keys()),border_color=COR_BRANCO,border_width=1.5,
+            values=list(self.pacientes_dict.keys()),border_color=COR_BRANCO,border_width=1.5,height=36,
             state="readonly"
         )
         self.combobox_paciente.pack(fill="x")
@@ -68,8 +77,7 @@ class NovoAtendimento(ctk.CTkFrame):
                                                 date_pattern = "dd/mm/yyyy",
                                                 font=("Arial", 12, "bold"),
                                                 background=COR_CINZA,
-                                                foreground="white",
-                                                height=36,border_color=COR_BRANCO,border_width=1.5)
+                                                foreground="white",border_color=COR_BRANCO,border_width=1.5)
         self.data_entry_atendimento.pack(fill="x")
         #card tipo de atendimento
         self.card_tipo_atendimento = self.criar_card("📋 Tipo de Atendimento", COR_BRANCO)
@@ -157,6 +165,7 @@ class NovoAtendimento(ctk.CTkFrame):
         adicionar_atendimento(atendimento)
         mg.showinfo("Sucesso", "Atendimento cadastrado com sucesso!")
         self.limpar_campos()
+        self.master.master.mostrar_atendimento()
     def limpar_campos(self):
         self.combobox_paciente.set("")
         self.combobox_tipo.set("")

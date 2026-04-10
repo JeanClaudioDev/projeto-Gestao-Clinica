@@ -3,13 +3,14 @@ from controllers.atendimento_controller import listar_atendimentos
 
 COR_ROXO = "#7c3aed"
 COR_BRANCO ="#ffffff"
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA = "#6b7280"
 COR_CINZA_ESCURO = "#111827"
 
 class TelaDetalhes(ctk.CTkFrame):
 
     def __init__(self, master, paciente, voltar_pacientes, novo_atendimento):
-        super().__init__(master, fg_color=COR_BRANCO)
+        super().__init__(master, fg_color=COR_CINZA_CLARO)
         self.paciente = paciente
         self.voltar_pacientes = voltar_pacientes
         self.novo_atendimento = novo_atendimento
@@ -22,15 +23,13 @@ class TelaDetalhes(ctk.CTkFrame):
         self.frame_acoes.pack(fill="x", pady=(0,10))
 
         self.btn_voltar = ctk.CTkButton(
-            self.frame_acoes,
-            text="← Voltar",fg_color="transparent",
-            text_color=COR_CINZA_ESCURO,
-            hover_color="#e5e7eb",
+            self.frame_acoes,height=36,
+            text="← Voltar",fg_color=COR_ROXO,
             command=self.voltar_pacientes)
         self.btn_voltar.pack(side="left")
 
         self.btn_novo_atendimento = ctk.CTkButton(
-            self.frame_acoes,
+            self.frame_acoes,height=36,
             text="➕ Novo Atendimento",
             fg_color=COR_ROXO,command=self.novo_atendimento)
         self.btn_novo_atendimento.pack(side="right")
@@ -59,10 +58,17 @@ class TelaDetalhes(ctk.CTkFrame):
         for a in atendimentos:
             if a["paciente_id"] == paciente["id"]:
                 total += 1
-        self.criar_item("Total de Atendimentos", total)
+        total_atendimentos = self.criar_item("Total de Atendimentos", total)
+        total_atendimentos.configure(cursor="hand2")
+        def abrir_hist(event):
+            self.master.master.abrir_historico_paciente(paciente)
+
+        total_atendimentos.bind("<Button-1>", abrir_hist)
+
+        for widget in total_atendimentos.winfo_children():
+            widget.bind("<Button-1>", abrir_hist)
 
     def criar_item(self, nome, texto):
-
         item = ctk.CTkFrame(self.lista, fg_color="#f9fafb", corner_radius=10)
         item.pack(fill="x", pady=5)
         item.bind("<Enter>", lambda e: item.configure(fg_color="#f3f4f6"))
@@ -103,3 +109,5 @@ class TelaDetalhes(ctk.CTkFrame):
             font=("Arial",20),
             text_color=COR_CINZA)
         seta.pack(side="right", padx=10)
+        seta.configure(cursor="hand2")
+        return item

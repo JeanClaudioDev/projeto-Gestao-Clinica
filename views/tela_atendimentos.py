@@ -1,18 +1,19 @@
 import customtkinter as ctk
 from tkcalendar import DateEntry
 from tkinter import ttk
-from tkinter import messagebox as mg
+from datetime import datetime as dt
 from controllers.atendimento_controller import listar_atendimentos
 from controllers.paciente_controller import listar_pacientes
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA = "#808080" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
-class Atendimento(ctk.CTkFrame):
+class TelaAtendimento(ctk.CTkFrame):
     def __init__(self, master, abrir_novo_atendimento):
-        super().__init__(master, fg_color=COR_BRANCO)
+        super().__init__(master, fg_color=COR_CINZA_CLARO)
         self.abrir_novo_atendimento = abrir_novo_atendimento
         #frame header
         self.frame_header = ctk.CTkFrame(self,fg_color=COR_BRANCO,border_width=1)
@@ -25,7 +26,7 @@ class Atendimento(ctk.CTkFrame):
         self.label_titulo.pack(side='left',pady=5,padx=20)
         #botao novo atendimento
         self.botao_atendimento = ctk.CTkButton(self.frame_header,
-                                               text="Novo Atendimento➕",
+                                               text="Novo Atendimento➕",height=36,
                                                text_color=COR_BRANCO,
                                                corner_radius=10,
                                                fg_color=COR_ROXO, command=self.abrir_novo_atendimento)
@@ -52,6 +53,7 @@ class Atendimento(ctk.CTkFrame):
         self.frame_filtros.grid_columnconfigure(0, weight=2)
         for i in range(1,5):
             self.frame_filtros.grid_columnconfigure(i, weight=1)
+        self.frame_filtros.grid_columnconfigure(5, weight=1)
         #label buscar paciente
         self.label_buscar = ctk.CTkLabel(self.frame_filtros,
                              text="Buscar Paciente",
@@ -125,6 +127,14 @@ class Atendimento(ctk.CTkFrame):
         self.data_fim.grid(row=1, column=4,sticky='ew',pady=5,padx=10)
         self.data_inicio.bind("<<DateEntrySelected>>", self.filtrar_atendimentos)
         self.data_fim.bind("<<DateEntrySelected>>", self.filtrar_atendimentos)
+        self.botao_buscar = ctk.CTkButton(
+            self.frame_filtros,
+            text="🔍 Buscar",height=36,
+            fg_color=COR_ROXO,
+            text_color=COR_BRANCO,
+            command=self.filtrar_atendimentos)
+        self.botao_buscar.grid(row=1, column=5, padx=10, pady=5)
+        
         style = ttk.Style()
 
         style.configure(
@@ -196,38 +206,58 @@ class Atendimento(ctk.CTkFrame):
                         self.total,
                         "Ver Histórico"))
     def filtrar_atendimentos(self, event=None):
+
         texto = self.entry_buscar.get().lower()
         status = self.combo_status.get()
         tipo = self.combo_tipo.get()
+
         data_inicio = self.data_inicio.get_date()
         data_fim = self.data_fim.get_date()
+
+        #corrigir caso datas estejam invertidas
+        if data_inicio > data_fim:
+            data_inicio, data_fim = data_fim, data_inicio
+
+        #limpar tabela
         for item in self.treeview_filtro.get_children():
             self.treeview_filtro.delete(item)
+
         atendimentos = listar_atendimentos()
         pacientes = listar_pacientes()
+
         pacientes_dict = {p["id"]: p["nome"] for p in pacientes}
         for atendimento in atendimentos:
-            nome_paciente = pacientes_dict.get(atendimento["paciente_id"], "")
-            # converter data do atendimento
-            from datetime import datetime
-            data_atendimento = datetime.strptime(atendimento["data"], "%d/%m/%Y").date()
-            if (texto in nome_paciente.lower()
-                and (status == "" or atendimento["status"] == status)
-                and (tipo == "" or atendimento["tipo"] == tipo)
-                and data_inicio <= data_atendimento <= data_fim):
 
-                self.treeview_filtro.insert(
-                    "",
-                    "end",
-                    values=(
-                        atendimento["id"],
-                        nome_paciente,
-                        atendimento["tipo"],
-                        atendimento["data"],
-                        atendimento["status"],
-                        "Ver"
-                    )
-                )
+            nome_paciente = pacientes_dict.get(atendimento["paciente_id"], "")
+
+            data_atendimento = dt.strptime(
+                atendimento["data"], "%d/%m/%Y"
+            ).date()
+
+            #filtro nome
+            if texto and texto not in nome_paciente.lower():
+                continue
+
+            #filtro status
+            if status and atendimento["status"] != status:
+                continue
+
+            # iltro tipo
+            if tipo and atendimento["tipo"] != tipo:
+                continue
+
+            # filtro data
+            if not (data_inicio <= data_atendimento <= data_fim):
+                continue
+            self.treeview_filtro.insert(
+                "",
+                "end",
+                values=(
+                    atendimento["id"],
+                    nome_paciente,
+                    atendimento["data"],
+                    atendimento["tipo"],
+                    "Ver"))
     def abrir_historico(self, event):
         item = self.treeview_filtro.selection()
         if not item:

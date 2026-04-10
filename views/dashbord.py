@@ -5,7 +5,6 @@ from controllers.atendimento_controller import listar_atendimentos
 from controllers.paciente_controller import listar_pacientes
 from datetime import datetime
 from pathlib import Path
-import tkinter as tk
 from PIL import Image
 
 """| Cor | Código | Uso |"""
@@ -27,19 +26,20 @@ TEXTO_ACOMPANHAMENTO = "#1e40af" #azul escuro texto
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PATH_IMG_MASK = BASE_DIR / "assets" / "mask.png"
-PATH_IMG_TREE = ""
+PATH_IMG_TOTAl = BASE_DIR / "assets" / "quality-service.png"
+PATH_IMG_TODAY = BASE_DIR / "assets" / "calendar.png"
 
 class Dashboard(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master, fg_color=COR_CINZA_CLARO)
         self.frame_titulo = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)
-        self.frame_titulo.pack(padx=20,pady=25,anchor='w')
+        self.frame_titulo.pack(padx=20,pady=(50,5),anchor='w')
 
         self.label_bem_vindo = ctk.CTkLabel(
             self.frame_titulo,
             text="Bem-vindo(a) de volta! 👋",
             text_color=COR_ROXO,
-            font=("Roboto", 16, "bold")
+            font=("Arial", 20, "bold")
         )
         self.label_bem_vindo.pack(pady=5, anchor='w')
 
@@ -47,16 +47,16 @@ class Dashboard(ctk.CTkFrame):
             self.frame_titulo,
             text="Dashboard",
             text_color=COR_CINZA_ESCURO,
-            font=("Roboto", 24, "bold")
+            font=("Arial", 28, "bold")
         )
         self.titulo.pack(pady=5, anchor='w')
         self.label_data = ctk.CTkLabel(self.frame_titulo,
                                        text=convert_date_for_label(),
-                                       text_color=COR_CINZA_ESCURO,font=("Roboto", 16, "bold"))
-        self.label_data.pack()
+                                       text_color=COR_CINZA_ESCURO,font=("Arial", 20, "bold"))
+        self.label_data.pack(pady=5, anchor='w')
         #frame para os cards
         self.frame_cards = ctk.CTkFrame(self, fg_color=COR_CINZA_CLARO)
-        self.frame_cards.pack(pady=20, padx=20,fill='both', expand=True)
+        self.frame_cards.pack(pady=(5,20), padx=20,fill='both', expand=True)
         self.frame_cards.grid_columnconfigure(0, weight=2)
         self.frame_cards.grid_columnconfigure(1, weight=2)
         self.frame_cards.grid_columnconfigure(2, weight=2)
@@ -65,17 +65,22 @@ class Dashboard(ctk.CTkFrame):
         mask = ctk.CTkImage(light_image=Image.open(PATH_IMG_MASK),
                                   dark_image=Image.open(PATH_IMG_MASK),
                                   size=(30, 30))
-
+        
         #frame para o card total pacientes
         self.frame_total_pacientes, self.label_numero_pacientes = self.criar_card_dashboard(mask,"Total de Pacientes")
         self.frame_total_pacientes.grid(row=0, column=0, pady=20, padx=20, sticky="ew")
 
+        total = ctk.CTkImage(light_image=Image.open(PATH_IMG_TOTAl),
+                                  dark_image=Image.open(PATH_IMG_TOTAl),
+                                  size=(30, 30))
         #frame para atendimentos registrado
-        self.frame_atendimentos, self.numero_atendimentos = self.criar_card_dashboard(mask,"Atendimentos Registrados")
-
+        self.frame_atendimentos, self.numero_atendimentos = self.criar_card_dashboard(total,"Atendimentos Registrados")
+        hoje = ctk.CTkImage(light_image=Image.open(PATH_IMG_TODAY),
+                                  dark_image=Image.open(PATH_IMG_TODAY),
+                                  size=(30, 30))
         self.frame_atendimentos.grid(row=0, column=1, pady=20, padx=20, sticky="ew")
         #frame atendimentos hoje
-        self.frame_atendimentos_hoje, self.numero_atendimentos_hoje = self.criar_card_dashboard(mask,"Atendimentos Hoje")
+        self.frame_atendimentos_hoje, self.numero_atendimentos_hoje = self.criar_card_dashboard(hoje,"Atendimentos Hoje")
         self.frame_atendimentos_hoje.grid(row=0, column=2, pady=20, padx=20, sticky="ew")
         
         #frame tabela
@@ -118,11 +123,11 @@ class Dashboard(ctk.CTkFrame):
         self.carregar_atendimentos_hoje()
     def criar_card_dashboard(self, emoji, titulo):
         card = ctk.CTkFrame(self.frame_cards, fg_color=COR_AZUL, corner_radius=20)
-        #card.bind("<Enter>", lambda e: card.configure(border_color=COR_BRANCO))
-        #card.bind("<Leave>", lambda e: card.configure(border_color="#e5e7eb"))
+        card.bind("<Enter>", lambda e: card.configure(border_color=COR_BRANCO))
+        card.bind("<Leave>", lambda e: card.configure(border_color="#e5e7eb"))
         card.grid_columnconfigure(0, weight=1)
 
-        label = ctk.CTkLabel(card, image=emoji, text="")
+        label = ctk.CTkLabel(card, image=emoji,text='')
 
         label.grid(row=0, column=0,pady=15,padx=15,sticky='w')
         label_titulo = ctk.CTkLabel(card,text=titulo,

@@ -5,6 +5,7 @@ from tkinter import messagebox as mg
 
 COR_ROXO = "#7c3aed"
 COR_BRANCO ="#ffffff"
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA = "#6b7280"
 COR_CINZA_ESCURO = "#111827"
 
@@ -12,20 +13,20 @@ COR_CINZA_ESCURO = "#111827"
 class HistoricoPacientes(ctk.CTkFrame):
 
     def __init__(self, master, paciente, voltar_atendimentos):
-        super().__init__(master, fg_color=COR_BRANCO)
+        super().__init__(master, fg_color=COR_CINZA_CLARO)
 
         self.paciente = paciente
         self.voltar_atendimentos = voltar_atendimentos
 
-        # frame principal
+        #frame principal
         self.frame_principal = ctk.CTkFrame(self, fg_color=COR_BRANCO)
         self.frame_principal.pack(fill="both", expand=True, padx=20, pady=20)
 
-        # frame header
+        #frame header
         self.frame_header = ctk.CTkFrame(self.frame_principal, fg_color=COR_BRANCO)
         self.frame_header.pack(fill="x", pady=(0,20))
 
-        # botão voltar
+        #botão voltar
         self.botao_voltar = ctk.CTkButton(
             self.frame_header,
             text="← Voltar",
@@ -34,7 +35,7 @@ class HistoricoPacientes(ctk.CTkFrame):
         )
         self.botao_voltar.pack(side="left")
 
-        # titulo
+        #titulo
         self.label_titulo = ctk.CTkLabel(
             self.frame_principal,
             text=f"Histórico de Atendimentos - {self.paciente['nome']}",
@@ -43,7 +44,7 @@ class HistoricoPacientes(ctk.CTkFrame):
         )
         self.label_titulo.pack(anchor="w", pady=(0,20))
 
-        # frame lista
+        #frame lista
         self.frame_lista = ctk.CTkScrollableFrame(self.frame_principal, fg_color=COR_BRANCO)
         self.frame_lista.pack(fill="both", expand=True)
 
@@ -97,9 +98,9 @@ class HistoricoPacientes(ctk.CTkFrame):
         confirm = mg.askyesno(
             "Excluir paciente",
             f"Deseja realmente excluir esse Atendimento?")
-        mg.showinfo("Sucesso", "Atendimento excluído com sucesso!")
         if not confirm:
             return
+        mg.showinfo("Sucesso", "Atendimento excluído com sucesso!")
         atendimentos = listar_atendimentos()
         atendimentos = [p for p in atendimentos if p["id"] != atendimento_id]
         salvar_json("dados/atendimentos.json", atendimentos)

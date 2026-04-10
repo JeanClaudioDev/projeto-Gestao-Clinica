@@ -6,12 +6,13 @@ from tkinter import messagebox as mg
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
 COR_AZUL = "#3b82f6" #Cards, destaques, status
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
+COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA = "#808080" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
-class Paciente(ctk.CTkFrame):
+class TelaPaciente(ctk.CTkFrame):
     def __init__(self,master,abrir_novo_paciente, abrir_detalhes):
-        super().__init__(master, fg_color=COR_BRANCO)
+        super().__init__(master, fg_color=COR_CINZA_CLARO)
         self.abrir_novo_paciente = abrir_novo_paciente
         self.abrir_detalhes = abrir_detalhes
         self.pacientes = listar_pacientes()
@@ -25,6 +26,7 @@ class Paciente(ctk.CTkFrame):
         self.novo_paciente = ctk.CTkButton(self.card_titulo,text="Novo Paciente➕",
                                                text_color=COR_BRANCO,
                                                corner_radius=10,
+                                               height=36,
                                                fg_color=COR_ROXO,command=self.abrir_novo_paciente)
         self.novo_paciente.pack(side="right",padx=5,pady=5)
         #label titulo
@@ -152,9 +154,9 @@ class Paciente(ctk.CTkFrame):
         confirm = mg.askyesno(
             "Excluir paciente",
             f"Deseja excluir {paciente['nome']}?")
-        mg.showinfo("Sucesso", "Paciente excluído com sucesso!")
         if not confirm:
             return
+        mg.showinfo("Sucesso", "Paciente excluído com sucesso!")
         pacientes = listar_pacientes()
         pacientes = [p for p in pacientes if p["id"] != paciente["id"]]
         salvar_json("dados/pacientes.json", pacientes)
