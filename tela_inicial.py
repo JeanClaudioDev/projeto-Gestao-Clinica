@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import messagebox as mg
+from theme import *
 from views.dashbord import Dashboard
 from views.tela_pacientes import TelaPaciente
 from views.tela_atendimentos import TelaAtendimento
@@ -7,12 +8,6 @@ from views.tela_novo_atendimento import NovoAtendimento
 from views.tela_novo_paciente import NovoPaciente
 from views.tela_detalhes_paciente import TelaDetalhes
 from views.tela_historico_pacientes import HistoricoPacientes
-
-COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
-COR_AZUL = "#3b82f6" #Cards, destaques, status
-COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
-COR_CINZA_CLARO = "#f9fafb" #Fundo da página
-COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
 class App(ctk.CTk):
     def __init__(self):

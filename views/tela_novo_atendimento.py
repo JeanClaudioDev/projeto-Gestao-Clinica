@@ -2,18 +2,11 @@ import customtkinter as ctk
 from tkcalendar import DateEntry
 from tkinter import messagebox as mg
 from models.atendimentos import Atendimento
-from views.tela_pacientes import TelaPaciente
+from theme import *
 from controllers.atendimento_controller import adicionar_atendimento
 from controllers.paciente_controller import listar_pacientes
 from pathlib import Path
 from PIL import Image
-
-COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
-COR_AZUL = "#3b82f6" #Cards, destaques, status
-COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
-COR_CINZA_CLARO = "#f9fafb" #Fundo da página
-COR_CINZA = "#808080" #Fundo da página
-COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 PATH_IMG_SAVE = BASE_DIR / "assets" / "diskette.png"

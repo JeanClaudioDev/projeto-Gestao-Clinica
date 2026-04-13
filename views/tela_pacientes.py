@@ -1,14 +1,9 @@
 import customtkinter as ctk
+from theme import *
 from services.json_manager import salvar_json
 from controllers.atendimento_controller import listar_atendimentos
 from controllers.paciente_controller import listar_pacientes
 from tkinter import messagebox as mg
-COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
-COR_AZUL = "#3b82f6" #Cards, destaques, status
-COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
-COR_CINZA_CLARO = "#f9fafb" #Fundo da página
-COR_CINZA = "#808080" #Fundo da página
-COR_CINZA_ESCURO = "#111827" #Textos e títulos
 
 class TelaPaciente(ctk.CTkFrame):
     def __init__(self,master,abrir_novo_paciente, abrir_detalhes):

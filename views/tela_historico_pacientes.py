@@ -1,14 +1,8 @@
 import customtkinter as ctk
+from theme import *
 from services.json_manager import salvar_json
 from controllers.atendimento_controller import listar_atendimentos
 from tkinter import messagebox as mg
-
-COR_ROXO = "#7c3aed"
-COR_BRANCO ="#ffffff"
-COR_CINZA_CLARO = "#f9fafb" #Fundo da página
-COR_CINZA = "#6b7280"
-COR_CINZA_ESCURO = "#111827"
-
 
 class HistoricoPacientes(ctk.CTkFrame):
 
