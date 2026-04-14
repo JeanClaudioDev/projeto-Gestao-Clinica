@@ -106,7 +106,7 @@ class Dashboard(ctk.CTkFrame):
         self.atualizar_dashboard()
         self.carregar_atendimentos_hoje()
     def criar_card_dashboard(self, emoji, titulo):
-        card = ctk.CTkFrame(self.frame_cards, fg_color=COR_AZUL, corner_radius=20)
+        card = ctk.CTkFrame(self.frame_cards, fg_color=COR_AZUL_DASH, corner_radius=20)
         card.bind("<Enter>", lambda e: card.configure(border_color=COR_BRANCO))
         card.bind("<Leave>", lambda e: card.configure(border_color="#e5e7eb"))
         card.grid_columnconfigure(0, weight=1)

@@ -1,7 +1,8 @@
 """| Cor | Código | Uso |"""
 
 COR_ROXO = "#7c3aed" #Sidebar, botões principais, ícones
-COR_AZUL = "#90b7f6" #Cards, destaques, status
+COR_AZUL = "#1b6ff7" #Cards, destaques, status
+COR_AZUL_DASH = "#90b7f6"
 COR_BRANCO ="#ffffff" #Fundo dos cards, superfícies
 COR_CINZA_CLARO = "#f9fafb" #Fundo da página
 COR_CINZA_ESCURO = "#111827" #Textos e títulos
