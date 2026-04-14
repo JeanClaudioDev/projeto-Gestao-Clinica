@@ -82,47 +82,41 @@ class TelaPaciente(ctk.CTkFrame):
         header.pack(fill="x", padx=20, pady=(10,5))
 
         ctk.CTkLabel(header, text="Nome", font=("Arial",14,"bold"),
-                    text_color=COR_CINZA_ESCURO, width=250, anchor="w").grid(row=0,column=0,padx=10)
+                    text_color=COR_CINZA_ESCURO,width=250, anchor="w").grid(row=0,column=0,padx=10)
         ctk.CTkLabel(header, text="Telefone", font=("Arial",14,"bold"),
-                    text_color=COR_CINZA_ESCURO, width=180, anchor="w").grid(row=0,column=1,padx=10)
+                    text_color=COR_CINZA_ESCURO,width=180, anchor="w").grid(row=0,column=1,padx=10)
         ctk.CTkLabel(header, text="Email", font=("Arial",14,"bold"),
-                    text_color=COR_CINZA_ESCURO, width=250, anchor="w").grid(row=0,column=2,padx=10)
+                    text_color=COR_CINZA_ESCURO,width=250, anchor="w").grid(row=0,column=2,padx=10)
         ctk.CTkLabel(header, text="Ações", font=("Arial",14,"bold"),
-                    text_color=COR_CINZA_ESCURO, width=150).grid(row=0,column=3,padx=10, sticky="e")
+                    text_color=COR_CINZA_ESCURO,width=150).grid(row=0,column=3,padx=10, sticky="e")
 
 
         for paciente in lista:
 
             linha = ctk.CTkFrame(self.frame_lista, fg_color="#ffffff")
             linha.pack(fill="x", padx=20, pady=2)
-            linha.bind("<Enter>", lambda e: linha.configure(fg_color="#f9fafb"))
-            linha.bind("<Leave>", lambda e: linha.configure(fg_color="#ffffff"))
+            linha.bind("<Enter>", lambda e, linha=linha: linha.configure(fg_color="#f9fafb"))
+            linha.bind("<Leave>", lambda e, linha=linha: linha.configure(fg_color="#ffffff"))
             linha.configure(cursor="hand2")
 
-            ctk.CTkLabel(
-                linha,
+            ctk.CTkLabel(linha,
                 text=paciente["nome"],
                 font=("Arial",14),
                 text_color=COR_CINZA_ESCURO,
                 width=250,
-                anchor="w"
-            ).grid(row=0,column=0,padx=10,pady=10)
+                anchor="w").grid(row=0,column=0,padx=10,pady=10)
 
-            ctk.CTkLabel(
-                linha,
+            ctk.CTkLabel(linha,
                 text=str(paciente["telefone"]),
                 text_color=COR_CINZA_ESCURO,
                 width=180,
-                anchor="w"
-            ).grid(row=0,column=1,padx=10)
+                anchor="w").grid(row=0,column=1,padx=10)
 
-            ctk.CTkLabel(
-                linha,
+            ctk.CTkLabel(linha,
                 text=str(paciente["email"]),
                 text_color=COR_CINZA_ESCURO,
                 width=250,
-                anchor="w"
-            ).grid(row=0,column=2,padx=10)
+                anchor="w").grid(row=0,column=2,padx=10)
 
             btn_editar = ctk.CTkButton(linha,text="Editar",width=60,fg_color=COR_AZUL, command=lambda p=paciente: self.editar_paciente(p))
             btn_editar.grid(row=0,column=3,padx=5, sticky="e")
@@ -134,6 +128,8 @@ class TelaPaciente(ctk.CTkFrame):
             for widget in linha.winfo_children():
                 if not isinstance(widget, ctk.CTkButton):
                     widget.bind("<Button-1>", lambda e, p=paciente: self.abrir_detalhes(p))
+                    widget.bind("<Enter>", lambda e, linha=linha: linha.configure(fg_color="#f9fafb"))
+                    widget.bind("<Leave>", lambda e, linha=linha: linha.configure(fg_color="#ffffff"))
     def buscar_paciente(self, event=None):
         texto = self.entry_buscar.get().lower()
         resultado = []
